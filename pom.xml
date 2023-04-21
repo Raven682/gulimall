@@ -8,13 +8,17 @@
     <name>gulimall</name>
     <description>聚合服务</description>
     <packaging>pom</packaging>
-
+<!--新创建的模块记得在总项目的pom文件中登记否则被认为是同级项目-->
     <modules>
         <module>gulimall-coupon</module>
         <module>gulimall-member</module>
         <module>gulimall-order</module>
         <module>gulimall-product</module>
         <module>gulimall-ware</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
+        <module>gulimall-common</module>
+        <module>gulimall-gateway</module>
     </modules>
 
 </project>
