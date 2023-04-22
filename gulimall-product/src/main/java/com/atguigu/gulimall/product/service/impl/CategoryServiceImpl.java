@@ -48,9 +48,29 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 //            return categoryEntity.getParentCid() == 0;
 //        }).collect(Collectors.toList());
         List<CategoryEntity> level1menus = entities.stream().filter(categoryEntity ->
+                //查询父分类
                 categoryEntity.getParentCid() == 0
-        ).collect(Collectors.toList());
+        ).map((menu)->{
+            //将当前菜单的子分类写入菜单中
+            menu.setChildren(getChildrens(menu,entities));
+            return menu;
+        }).sorted((menu1,menu2)->{
+            return (menu1.getSort()==null?0:menu1.getSort()) - (menu2.getSort()==null?0:menu2.getSort());
+        }).collect(Collectors.toList());
         return level1menus;
     }
-
+    //递归查找所有菜单的子菜单
+    private List<CategoryEntity> getChildrens(CategoryEntity root,List<CategoryEntity> all){
+        List<CategoryEntity> children = all.stream().filter(categoryEntity -> {
+            return categoryEntity.getParentCid() == root.getCatId();
+        }).map(categoryEntity -> {
+            //1、找到子菜单
+            categoryEntity.setChildren(getChildrens(categoryEntity, all));
+            return categoryEntity;
+        }).sorted((menu1, menu2) -> {
+            //2、菜单的排序
+            return (menu1.getSort()==null?0:menu1.getSort()) - (menu2.getSort()==null?0:menu2.getSort());
+        }).collect(Collectors.toList());
+        return children;
+    }
 }
